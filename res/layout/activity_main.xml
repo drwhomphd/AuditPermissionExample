@@ -21,7 +21,8 @@
         android:text="@string/toggleBtnAuditStream" 
         android:textOn="@string/toggleBtnAuditStream_On"
         android:textOff="@string/toggleBtnAuditStream_Off"
-        android:onClick="toggleBtnAuditStream_onClick"/>
+        android:onClick="toggleBtnAuditStream_onClick"
+        android:checked="false"/>
 
     <TextView
         android:id="@+id/txtViewOutput"

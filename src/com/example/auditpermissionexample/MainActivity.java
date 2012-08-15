@@ -57,16 +57,17 @@ public class MainActivity extends Activity {
     
     public void toggleBtnAuditStream_onClick(View view) {
     	// Check our button state.
-    	ToggleButton toggleBtnAudit = (ToggleButton) findViewById(R.id.toggleBtnAuditStream);
+    	ToggleButton toggleBtnAudit = ((ToggleButton) view);
     	Thread auditstream;
+    	auditstream = new Thread(new AuditStreamReader());
     	
-    	// Audit stream is activated, turn it off
+    	//The click turned the button on
     	if(toggleBtnAudit.isChecked()) {
     		
-    	}
-    	else { // Audit stream is not activated, turn it on
-    		auditstream = new Thread(new AuditStreamReader());
     		auditstream.start();
+    	}
+    	else { // The click turned the button off
+    		auditstream.interrupt();
     	}
     	
     	
@@ -101,6 +102,14 @@ public class MainActivity extends Activity {
 				// Read records until we hit a null
 				while((line = in.readLine()) != null) {
 					System.out.println(line);
+					
+					// Check for interrupts... if we've been interrupted, close our socket
+					// and exit
+					if(Thread.interrupted()) {
+						auditStream.close();
+						return;
+					}
+					
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
