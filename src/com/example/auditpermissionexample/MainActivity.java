@@ -3,12 +3,17 @@ package com.example.auditpermissionexample;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Queue;
 
+import android.net.LocalSocket;
+import android.net.LocalSocketAddress;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 
@@ -27,6 +32,7 @@ public class MainActivity extends Activity {
     public void btnGetID_onClick(View view) {
     	Process getIds = null;
     	
+    	// Create our ID process, run it, and print the output.
     	try {
     		getIds = new ProcessBuilder()
     					.command("id")
@@ -50,6 +56,57 @@ public class MainActivity extends Activity {
     }
     
     public void toggleBtnAuditStream_onClick(View view) {
+    	// Check our button state.
+    	ToggleButton toggleBtnAudit = (ToggleButton) findViewById(R.id.toggleBtnAuditStream);
+    	Thread auditstream;
+    	
+    	// Audit stream is activated, turn it off
+    	if(toggleBtnAudit.isChecked()) {
+    		
+    	}
+    	else { // Audit stream is not activated, turn it on
+    		auditstream = new Thread(new AuditStreamReader());
+    		auditstream.start();
+    	}
+    	
+    	
+    }
+    
+    /** An extra thread that deals with connecting to and reading the audit stream without
+     * interrupting the original UI thread.
+     */
+    private class AuditStreamReader implements Runnable {
+    	
+    	private Queue<String> audit_record;
+    	private static final String AUDIT_DEVICE = "/dev/audit";
+    	private LocalSocket auditStream;
+    	
+		
+		@Override
+		public void run() {
+    		// Set up the local socket address to our audit stream
+	    	LocalSocketAddress auditAddress = new LocalSocketAddress(AUDIT_DEVICE, LocalSocketAddress.Namespace.FILESYSTEM);
+	    	
+	    	// Open audit stream device with Local Socket
+	    	auditStream = new LocalSocket();
+	    	
+	    	String line;
+			BufferedReader in;
+	    	
+	    	try {
+				auditStream.connect(auditAddress);
+				
+				in = new BufferedReader(new InputStreamReader(auditStream.getInputStream()));
+
+				// Read records until we hit a null
+				while((line = in.readLine()) != null) {
+					System.out.println(line);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
     	
     }
 }
