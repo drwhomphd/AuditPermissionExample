@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/btnGetID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/btnGetID"
+        android:onClick="btnGetID_onClick" />
+
+    <ToggleButton
+        android:id="@+id/toggleBtnAuditStream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/toggleBtnAuditStream" 
+        android:textOn="@string/toggleBtnAuditStream_On"
+        android:textOff="@string/toggleBtnAuditStream_Off"
+        android:onClick="toggleBtnAuditStream_onClick"/>
+
+    <TextView
+        android:id="@+id/txtViewOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        android:text="" />
+
+</RelativeLayout>

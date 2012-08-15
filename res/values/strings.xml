@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">AuditPermissionExample</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Audit Permission Example</string>
+    <string name="btnGetID">Get ID</string>
+    <string name="toggleBtnAuditStream">AuditStream</string>
+    <string name="toggleBtnAuditStream_On">Audit Stream On</string>
+    <string name="toggleBtnAuditStream_Off">Audit Stream Off</string>
+
+</resources>
