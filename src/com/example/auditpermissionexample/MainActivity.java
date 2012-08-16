@@ -74,7 +74,8 @@ public class MainActivity extends Activity {
     		auditstream.start();
     	}
     	else { // The click turned the button off
-    		auditstream.interrupt();
+    		if(auditstream != null)
+    			auditstream.interrupt();
     	}
     	
     	
@@ -128,7 +129,7 @@ public class MainActivity extends Activity {
 							});
 						}
 
-						Thread.sleep(20);
+						Thread.sleep(100);
 					}
 
 				}catch (InterruptedException e) {

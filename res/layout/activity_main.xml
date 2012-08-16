@@ -24,16 +24,20 @@
         android:onClick="toggleBtnAuditStream_onClick"
         android:checked="false"/>
 
+  <ScrollView
+      android:id="@+id/scrollViewOutput"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/btnGetID"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentRight="true"
+      android:layout_alignParentTop="true" >
+ 
     <TextView
         android:id="@+id/txtViewOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnGetID"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:clickable="false"
-        android:lines="2048"
         android:linksClickable="false"
         android:longClickable="false"
         android:overScrollMode="ifContentScrolls"
@@ -43,5 +47,7 @@
         android:scrollbars="vertical"
         android:text=""
         android:typeface="monospace" />
+ 
+ </ScrollView> 
 
 </RelativeLayout>
