@@ -28,11 +28,20 @@
         android:id="@+id/txtViewOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btnGetID"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:scrollbarStyle="insideOverlay"
+        android:clickable="false"
+        android:lines="2048"
+        android:linksClickable="false"
+        android:longClickable="false"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollHorizontally="false"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarStyle="outsideInset"
         android:scrollbars="vertical"
-        android:text="" />
+        android:text=""
+        android:typeface="monospace" />
 
 </RelativeLayout>

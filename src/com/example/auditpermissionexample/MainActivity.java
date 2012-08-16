@@ -59,15 +59,15 @@ public class MainActivity extends Activity {
     	// Check our button state.
     	ToggleButton toggleBtnAudit = ((ToggleButton) view);
     	Thread auditstream;
-    	auditstream = new Thread(new AuditStreamReader());
+    	auditstream = new Thread(new AuditStreamReader(view));
     	
     	//The click turned the button on
     	if(toggleBtnAudit.isChecked()) {
-    		
     		auditstream.start();
     	}
     	else { // The click turned the button off
     		auditstream.interrupt();
+    		System.out.println("Thread Interrupted: " + auditstream.isInterrupted() + "\n");
     	}
     	
     	
@@ -81,17 +81,20 @@ public class MainActivity extends Activity {
     	private Queue<String> audit_record;
     	private static final String AUDIT_DEVICE = "/dev/audit";
     	private LocalSocket auditStream;
+    	private View parent_view; // The view of this thread's parent UI
     	
-		
-		@Override
+    	public AuditStreamReader(View view) {
+    		this.parent_view = view;
+    	}
+    	
+				@Override
 		public void run() {
     		// Set up the local socket address to our audit stream
 	    	LocalSocketAddress auditAddress = new LocalSocketAddress(AUDIT_DEVICE, LocalSocketAddress.Namespace.FILESYSTEM);
 	    	
 	    	// Open audit stream device with Local Socket
 	    	auditStream = new LocalSocket();
-	    	
-	    	String line;
+
 			BufferedReader in;
 	    	
 	    	try {
@@ -99,22 +102,37 @@ public class MainActivity extends Activity {
 				
 				in = new BufferedReader(new InputStreamReader(auditStream.getInputStream()));
 
-				// Read records until we hit a null
-				while((line = in.readLine()) != null) {
-					System.out.println(line);
-					
-					// Check for interrupts... if we've been interrupted, close our socket
-					// and exit
-					if(Thread.interrupted()) {
-						auditStream.close();
-						return;
+				try {
+					// Read records until we hit a null
+					while(!Thread.currentThread().isInterrupted()) {
+						// Read line
+						final String line = in.readLine();
+
+						if(line != null) {
+							parent_view.post(new Runnable() {
+								public void run() {
+									TextView txtOutput = (TextView) findViewById(R.id.txtViewOutput);		
+									txtOutput.append(line + "\n");
+								}
+							});
+						}
+
+						Thread.sleep(20);
 					}
-					
+
+				}catch (InterruptedException e) {
+					android.util.Log.i("threads", "Audit Stream Thread Interrupted, closing stream.");
+					auditStream.close();
+					return;
 				}
+				
+				// Loop is done, we were interrupted, close stream
+				auditStream.close();
+				return;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} 
 		}
     	
     }
