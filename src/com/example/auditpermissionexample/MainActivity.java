@@ -17,6 +17,9 @@ import android.widget.ToggleButton;
 
 public class MainActivity extends Activity {
 
+	// Thread for the audit stream.
+	private Thread auditstream;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,16 +61,20 @@ public class MainActivity extends Activity {
     public void toggleBtnAuditStream_onClick(View view) {
     	// Check our button state.
     	ToggleButton toggleBtnAudit = ((ToggleButton) view);
-    	Thread auditstream;
-    	auditstream = new Thread(new AuditStreamReader(view));
     	
     	//The click turned the button on
     	if(toggleBtnAudit.isChecked()) {
+    		
+    		// Kill the thread if it already exists
+    		if(auditstream != null)
+    			auditstream.interrupt();
+    		
+    		// Start our thread
+    		auditstream = new Thread(new AuditStreamReader(view));
     		auditstream.start();
     	}
     	else { // The click turned the button off
     		auditstream.interrupt();
-    		System.out.println("Thread Interrupted: " + auditstream.isInterrupted() + "\n");
     	}
     	
     	
@@ -83,6 +90,10 @@ public class MainActivity extends Activity {
     	private LocalSocket auditStream;
     	private View parent_view; // The view of this thread's parent UI
     	
+    	/** 
+    	 * 
+    	 * @param view The view of the object that started the thread. Used for updating the UI thread.
+    	 */
     	public AuditStreamReader(View view) {
     		this.parent_view = view;
     	}
@@ -103,7 +114,7 @@ public class MainActivity extends Activity {
 				in = new BufferedReader(new InputStreamReader(auditStream.getInputStream()));
 
 				try {
-					// Read records until we hit a null
+					// Read until we're interrupted
 					while(!Thread.currentThread().isInterrupted()) {
 						// Read line
 						final String line = in.readLine();
@@ -127,6 +138,7 @@ public class MainActivity extends Activity {
 				}
 				
 				// Loop is done, we were interrupted, close stream
+				android.util.Log.i("threads", "Audit Stream Thread Interrupted, closing stream.");
 				auditStream.close();
 				return;
 			} catch (IOException e) {
