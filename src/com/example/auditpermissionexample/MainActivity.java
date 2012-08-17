@@ -22,20 +22,14 @@ public class MainActivity extends Activity {
 	private Thread auditstream;
 	
 	private void auditctlInit() {
-		java.lang.Process auditctl = null;
 		
 		try {
-			// First we ignore this processes pid
-			auditctl = Runtime.getRuntime().exec("auditctl -A exit,never -F pid=" + android.os.Process.myPid());
+			// Reload the rules file. This will (usually) contain a -D at the beginning for a clean slate. Done so that
+			// we don't add a bunch of different pids every time the application starts as the pid will change each run.
+			Runtime.getRuntime().exec("auditctl -R /etc/audit/auditd.rules"); 
 			
-			BufferedReader in = new BufferedReader(new InputStreamReader(auditctl.getInputStream()));
-	   		 
-    		String line = "";
-    		
-    		while((line = in.readLine()) != null) {
-    			TextView txtOutput = (TextView) findViewById(R.id.txtViewOutput);
-    			txtOutput.append(line + "\n");
-    		}
+			// Ignore our pid
+			Runtime.getRuntime().exec("auditctl -A exit,never -F pid=" + android.os.Process.myPid()); // Ignore our own PID
 		} catch (IOException e) {
     		e.printStackTrace();
     		//auditctl.destroy();
