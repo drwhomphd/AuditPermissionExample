@@ -14,16 +14,47 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import android.os.*;
 
 public class MainActivity extends Activity {
 
 	// Thread for the audit stream.
 	private Thread auditstream;
 	
+	private void auditctlInit() {
+		java.lang.Process auditctl = null;
+		
+		try {
+			// First we ignore this processes pid
+			auditctl = Runtime.getRuntime().exec("auditctl -A exit,never -F pid=" + android.os.Process.myPid());
+			
+			BufferedReader in = new BufferedReader(new InputStreamReader(auditctl.getInputStream()));
+	   		 
+    		String line = "";
+    		
+    		while((line = in.readLine()) != null) {
+    			TextView txtOutput = (TextView) findViewById(R.id.txtViewOutput);
+    			txtOutput.append(line + "\n");
+    		}
+		} catch (IOException e) {
+    		e.printStackTrace();
+    		//auditctl.destroy();
+    	}
+	}
+	
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        auditctlInit();
+    }
+    
+    @Override
+    public void onStart() {
+    	super.onStart();
+    	
     }
 
     @Override
@@ -33,8 +64,8 @@ public class MainActivity extends Activity {
     }
     
     public void btnGetID_onClick(View view) {
-    	Process getIds = null;
-    	
+    	java.lang.Process getIds = null;
+    
     	// Create our ID process, run it, and print the output.
     	try {
     		getIds = new ProcessBuilder()
@@ -48,7 +79,7 @@ public class MainActivity extends Activity {
     		
     		while((line = in.readLine()) != null) {
     			TextView txtOutput = (TextView) findViewById(R.id.txtViewOutput);
-    			txtOutput.setText(line + "\n");
+    			txtOutput.append(line + "\n");
     		}
     		
     	}
