@@ -56,6 +56,27 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+    public void btnListRules_onClick(View view) {
+    	try {
+			
+    		String line;
+    		
+    		// List our current rules
+    		java.lang.Process auditctl = Runtime.getRuntime().exec("auditctl -l");
+			
+			// Get our input stream
+    		BufferedReader in = new BufferedReader(new InputStreamReader(auditctl.getInputStream()));
+    		
+    		while((line = in.readLine()) != null) {
+    			TextView txtOutput = (TextView) findViewById(R.id.txtViewOutput);
+    			txtOutput.append(line + "\n");
+    		}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    }
     
     public void btnGetID_onClick(View view) {
     	java.lang.Process getIds = null;

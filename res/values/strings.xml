@@ -8,5 +8,6 @@
     <string name="toggleBtnAuditStream">AuditStream</string>
     <string name="toggleBtnAuditStream_On">Audit Stream On</string>
     <string name="toggleBtnAuditStream_Off">Audit Stream Off</string>
+    <string name="btnListRules">List Rules</string>
 
 </resources>

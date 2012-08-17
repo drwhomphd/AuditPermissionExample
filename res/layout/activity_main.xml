@@ -48,6 +48,15 @@
         android:text=""
         android:typeface="monospace" />
  
- </ScrollView> 
+ </ScrollView>
+
+  <Button
+      android:id="@+id/btnListRules"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_toRightOf="@+id/btnGetID"
+      android:onClick="btnListRules_onClick"
+      android:text="@string/btnListRules" />
 
 </RelativeLayout>
